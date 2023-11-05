@@ -23,7 +23,7 @@
     // }
     ?>
     <tr>
-        <!-- <th><?php //echo $select['sid'] ?></th> -->
+        <!-- <th><?php// echo $select['sid'] ?></th> -->
         <td><?php echo $select['tid'] ?></td>
         <td><img src="./singleimg/<?php echo $select['tpic'] ?>" alt="No Img Found" width="70" height="70"></td>
         <td><?php echo $select['tname'] ?></td>
@@ -39,8 +39,8 @@
         <td><?php echo $select['scnic'] ?></td>
         <td><?php echo $select['semail'] ?></td>
         <td><?php echo $select['sdate'] ?></td>
-        <td><a href="./student-update.php?sid=<?php echo $select['sid'] ?>" class="btn btn-success">Update</a></td>
-        <td><button type="button" data-id="<?php echo $select['sid'] ?>" class="btn btn-danger delete">Delete</button></td>
+        <td><a href="./student-update.php?sid=<?php echo $select['sid']; ?>" class="btn btn-success">Update</a></td>
+        <td><button type="button" data-del="<?php echo $select['sid']; ?>" class="btn btn-danger delete">Delete</button></td>
     </tr>
     <?php
     }

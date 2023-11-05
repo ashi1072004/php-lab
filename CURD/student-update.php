@@ -5,63 +5,6 @@
     $std = "SELECT * FROM `std` WHERE `sid` = '$sid' ";
     $updtrun = mysqli_query($conn, $std);
     $fetch = mysqli_fetch_assoc($updtrun);
-    
-    if(isset($_POST['sub'])){
-      $teachid = mysqli_real_escape_string($conn, $_POST['teachid']);
-      $classtime = mysqli_real_escape_string($conn, $_POST['classtime']);
-      $srollno = mysqli_real_escape_string($conn, $_POST['srollno']);
-      $sname = mysqli_real_escape_string($conn, $_POST['sname']);
-      $sfname = mysqli_real_escape_string($conn, $_POST['sfname']);
-      $smobile = mysqli_real_escape_string($conn, $_POST['smobile']);
-      $scnic = mysqli_real_escape_string($conn, $_POST['scnic']);
-      $semail = mysqli_real_escape_string($conn, $_POST['semail']);
-      $spic = $_FILES['spic']['name'];
-      $sdate = date("Y-m-d");
-      // echo '<pre>';
-      // print_r($spic);
-      // echo '</pre>';
-      if(!empty($spic)){
-        // if new pic inserted
-        $exe = pathinfo($spic, PATHINFO_EXTENSION);
-        // echo $exe;
-        $extn = array('jpg','png','jpeg','JPG','PNG','JPEG');
-        if(in_array($exe, $extn)){
-            // Delete old pic
-            unlink("./singleimg/".$fetch['spic']);
-            $p = rand(10000,99999).".".$exe;
-            // Update record
-            $sql = "UPDATE `std` SET `classtime`='$classtime', `teachid`='$teachid', `srollno`='$srollno', `sname`='$sname', `sfname`='$sfname', `smobile`='$smobile', `scnic`='$scnic', `semail`='$semail', `spic`='$p', `sdate`='$sdate' WHERE `sid`='$sid' ";
-            $run = mysqli_query($conn,$sql);
-            if($run){
-                // Upload new pic
-                move_uploaded_file($_FILES['spic']['tmp_name'], './singleimg/'.$p);
-                $show = 'DATA HAS BEEN UPDATED WITH NEW STUDENT PIC';
-                // Move back to std table view
-                header("Refresh:2, url=./student-view.php");
-            }
-            else{
-                $show = 'DATA HAS NOT BEEN UPDATED';
-            }
-        }
-        else{
-            $show = 'INVALID IMAGE';
-        }
-      }
-      else{
-          // if new pic not inserted
-          // $p = $fetch['spic'];
-          $sql = "UPDATE `std` SET `classtime`='$classtime', `teachid`='$teachid', `srollno`='$srollno', `sname`='$sname', `sfname`='$sfname', `smobile`='$smobile', `scnic`='$scnic', `semail`='$semail', `sdate`='$sdate' WHERE `sid`='$sid' ";
-          $run = mysqli_query($conn,$sql);
-          if($run){
-              $show = 'DATA HAS BEEN UPDATED WITH OLD STUDENT PIC';
-              // Move back to std table view
-              header("Refresh:3, url=./student-view.php");
-          }
-          else{
-              $show = 'DATA HAS NOT BEEN UPDATED';
-          }
-      }
-    }
 ?>
 
 <!doctype html>
@@ -79,15 +22,11 @@
 </head>
 
 <body>
-  <header>
-    <!-- place navbar here -->
-  </header>
   <main>
     <div class="container-fluid banner-image">
         <div class="row overlay justify-content-center m-0">
             <div class="col-md-4 col-lg-4 col-sm-6 my-3">
-                <form class="p-5" autocomplete="on" method="POST" enctype="multipart/form-data">
-                    <p class="text-center text-white"><?php echo @$show; ?></p>
+                <form id="form" class="p-5">
                     <h1 class="text-center text-white">Enter Data</h1>
                     <div class="mt-5 mb-3">
                       <select class="form-select" name="teachid" id="i1">
@@ -128,6 +67,7 @@
                     </div>
                     <div class="mt-5 mb-3">
                         <input type="text" class="inp" name="sname" value="<?php echo $fetch['sname']?>" placeholder="Enter Your Name" required>
+                        <input type="hidden" class="inp" name="sid" value="<?php echo $fetch['sid']?>">
                     </div>
                     <div class="mt-5 mb-3">
                       <input type="text" class="inp" name="sfname" value="<?php echo $fetch['sfname']?>" placeholder="Enter Your Father Name" required>
@@ -152,12 +92,105 @@
         </div>
     </div>
   </main>
-  <footer>
-    <!-- place footer here -->
-  </footer>
   <!-- Bootstrap JavaScript Libraries -->
   <script src="../files/popper.min.js"></script>
   <script src="../files/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    $(document).ready(function () {
+      $("#form").on("submit", function (event) {
+        event.preventDefault();
+        // form validation
+        let formData = new FormData(form);
+        $.ajax({
+          type: "POST",
+          url: "./ajax/single-update.php",
+          data: formData,
+          contentType: false,
+          processData: false,
+          success: function (res) {
+            // alert(res);
+            if (res == 1) {
+              $("#form").trigger("reset");
+              const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.addEventListener('mouseenter', Swal.stopTimer)
+                  toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+              })
+              Toast.fire({
+                icon: 'success',
+                title: 'Data has been updated with new student pic!'
+              })
+              setTimeout(() => {
+                window.location.href = "./single-insert-view.php";
+              }, 4000);
+            } else if (res == 2) {
+              const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.addEventListener('mouseenter', Swal.stopTimer)
+                  toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+              })
+              
+              Toast.fire({
+                icon: 'warning',
+                title: 'Data is not updated!'
+              })
+            } else if(res == 3) {
+              const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.addEventListener('mouseenter', Swal.stopTimer)
+                  toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+              })
+              
+              Toast.fire({
+                icon: 'warning',
+                title: 'Invalid image!'
+              })
+            }else{
+              const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.addEventListener('mouseenter', Swal.stopTimer)
+                  toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+              })
+              
+              Toast.fire({
+                icon: 'success',
+                title: 'Data has been updated with old student pic!'
+              })
+              setTimeout(() => {
+                window.location.href = "./single-insert-view.php";
+              }, 4000);
+            }
+          }
+        });
+      });
+    });
+  </script>
 </body>
 
 </html>

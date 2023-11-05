@@ -73,16 +73,34 @@
   <script src="../files/bootstrap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script>
-    showData();
-    function showData(){
-      $.ajax({
-        method: "GET",
-        url: "./ajax/single-view.php",
-        success: function(res){
-          $("#tbody").html(res);
-        }
+    $(document).ready(function(){
+      showData();
+      function showData(){
+        $.ajax({
+          method: "GET",
+          url: "./ajax/single-view.php",
+          success: function(res){
+            $("#tbody").html(res);
+          }
+        });
+      }
+      $(document).on("click", ".delete", function() {
+        var sid = $(this).data("del");
+        var btn = this;
+        // alert(sid);
+        $.ajax({
+          type: "GET",
+          url: "./ajax/single-del.php",
+          data: {"sid": sid},
+          success: function(res){
+              // alert(res);
+              if(res == 1){
+                  $(btn).closest("tr").fadeOut();
+              }
+          }
+        });
       });
-    }
+    });
   </script>
 </body>
 

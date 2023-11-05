@@ -100,7 +100,7 @@
                             style="border: 2px solid lightgrey;">
                             <thead class="table-secondary">
                                 <tr>
-                                    <!-- <th>#</th> -->
+                                    <th>#</th>
                                     <th>Teacher ID</th>
                                     <th>Teacher Pic</th>
                                     <th>Teacher Name</th>
@@ -171,7 +171,6 @@
                                 icon: 'success',
                                 title: 'Data has been inserted!'
                             })
-                            // alert("DATA HAS BEEN INSERTED");
                             showData();
                         } else if (res == 2) {
                             const Toast = Swal.mixin({
@@ -190,7 +189,6 @@
                                 icon: 'warning',
                                 title: 'Data has not been inserted!'
                             })
-                            // alert("DATA HAS NOT BEEN INSERTED");
                         } else {
                             const Toast = Swal.mixin({
                                 toast: true,
@@ -208,7 +206,6 @@
                                 icon: 'warning',
                                 title: 'Invalid image!'
                             })
-                            // alert("INVALID IMAGE");
                         }
                     }
                 });
@@ -223,17 +220,21 @@
                 });
             }; 
             showData();
-            $(".delete").on("click", () => {
-                var sid = $(this).data("id");
-                alert(sid);
-                // $.ajax({
-                //     type: "GET",
-                //     url: "./ajax/single-del.php",
-                //     data: {"sid": sid},
-                //     success: function(res){
-                //         alert(res);
-                //     }
-                // });
+            $(document).on("click", ".delete", function() {
+                var sid = $(this).data("del");
+                var btn = this;
+                // alert(sid);
+                $.ajax({
+                    type: "GET",
+                    url: "./ajax/single-del.php",
+                    data: {"sid": sid},
+                    success: function(res){
+                        // alert(res);
+                        if(res == 1){
+                            $(btn).closest("tr").fadeOut();
+                        }
+                    }
+                });
             });
         });
     </script>

@@ -1,15 +1,5 @@
 <?php
     include('./connection.php');
-
-    if(isset($_GET['search'])){
-      $search = $_GET['search'];
-      // if(empty($search)){
-        
-      // }
-    }
-    else{
-      $search = NULL;
-    }
 ?>
 <!doctype html>
 <html lang="en">
@@ -31,12 +21,14 @@
       <div class="col-12">
         <div class="table-responsive mt-5">
             <h1 class="py-2 text-center">Student Record</h1>
-            <form>
+            <!-- <form>
               <div class="input-group my-3 align-right">
                 <input type="search" class="form-control" name="search" placeholder="Search Record" aria-describedby="addon">
                 <span class="input-group-text" id="addon"><i class="fa-solid fa-magnifying-glass"></i></span>
               </div>
-            </form>
+            </form> -->
+
+            <!-- <button type="button" class="btn btn-primary" onclick="showData()">Show Record</button> -->
             <table class="table table-hover table-borderless align-middle">
                 <thead class="table-secondary">
                     <tr>
@@ -60,65 +52,13 @@
                         <th>Delete</th>
                     </tr>
                 </thead>
-                <tbody>
-                <?php
-                
-                    // $sr = "SELECT * FROM `std`, `teacher`, `classtime` WHERE (`srollno` LIKE '$search' or `teachid` LIKE '$search' or `sname` LIKE '%$search%' or `sfname` LIKE '%$search%' or `smobile` LIKE '%$search%' or `scnic` LIKE '$search%' or `semail` LIKE '%$search%' or `sdate` LIKE '%$search%') AND std.teachid=teacher.tid AND std.classtime=classtime.ctid ORDER BY `srollno` ";
-                    // $srun = mysqli_query($conn, $sr);
-
-                    // $sql = "SELECT * FROM `std` s INNER JOIN `teacher` t ON s.teachid=t.tid";
-                    // $sql = "SELECT * FROM `std` s LEFT JOIN `teacher` t ON s.teachid=t.tid";
-                    // $sql = "SELECT * FROM `std` s RIGHT JOIN `teacher` t ON s.teachid=t.tid";
-                    // $sql = "SELECT * FROM `std` s RIGHT JOIN `teacher` t ON s.teachid=t.tid UNION SELECT * FROM `std` s LEFT JOIN `teacher` t ON s.teachid=t.tid ORDER BY `srollno`";
-                    // $sql = "SELECT * FROM `std` s RIGHT JOIN `classtime` ct ON s.classtime=ct.ctid ORDER BY `srollno`";
-                    // $sql = "SELECT * FROM `std` s LEFT JOIN `teacher` t ON s.teachid=t.tid LEFT JOIN `classtime` ct ON s.classtime=ct.ctid ORDER BY `srollno` ";
-                    
-                    $sql = "SELECT * FROM `std` s INNER JOIN `teacher` t ON s.teachid=t.tid INNER JOIN `classtime` ct ON s.classtime=ct.ctid ORDER BY `srollno` ";
-
-                    $run = mysqli_query($conn, $sql);
-                    while( $select = mysqli_fetch_array($run, MYSQLI_ASSOC)){
-                    // echo "<pre>";
-                    // print_r($select);
-                    // echo "</pre>";
-
-                    // if($select['teachid']=='0'){
-                    //   $teachid = NULL;
-                    // }else{
-                    //   $teachid = $select['teachid'];
-                    // }
-                    ?>
-                    <tr>
-                        <!-- <th><?php //echo $select['sid'] ?></th> -->
-                        <td><?php echo $select['tid'] ?></td>
-                        <td><img src="./singleimg/<?php echo $select['tpic'] ?>" alt="No Img Found" width="70" height="70"></td>
-                        <td><?php echo $select['tname'] ?></td>
-                        <!-- <td><?php //echo $select['ctid'] ?></td> -->
-                        <td><?php echo $select['cttime'] ?></td>
-                        <td><?php echo $select['cname'] ?></td>
-                        <td><?php echo $select['srollno'] ?></td>
-                        <!-- <td><?php //echo $teachid ?></td> -->
-                        <td><img src="./singleimg/<?php echo $select['spic'] ?>" alt="No Img Found" width="70" height="70"></td>
-                        <td><?php echo $select['sname'] ?></td>
-                        <td><?php echo $select['sfname'] ?></td>
-                        <td><?php echo $select['smobile'] ?></td>
-                        <td><?php echo $select['scnic'] ?></td>
-                        <td><?php echo $select['semail'] ?></td>
-                        <td><?php echo $select['sdate'] ?></td>
-                        <td><a href="./student-update.php?sid=<?php echo $select['sid'] ?>" class="btn btn-success">Update</a></td>
-                        <td><a href="./student-delete.php?sid=<?php echo $select['sid'] ?>" class="btn btn-danger">Delete</a></td>
-                    </tr>
-                    <?php
-                    }
-                ?>  
+                <tbody id="tbody">
+                  
                 </tbody>
             </table>
         </div>
       </div>
       <div class="col-12 my-3 text-center">
-        <!-- <form method="get">
-          <input type="submit" name="del" class="btn btn-danger px-4 py-2" value="Empty Table">
-          <h1><?php// echo @$msg; ?></h1>
-        </form> -->
         <a href="./student-insert.php" target="_blank" class="btn btn-success px-4 py-2 mx-2">Insert Data</a>
         <a href="./single_empty.php?del" class="btn btn-danger px-4 py-2">Empty Table</a>
       </div>
@@ -131,6 +71,18 @@
   <!-- Bootstrap JavaScript Libraries -->
   <script src="../files/popper.min.js"></script>
   <script src="../files/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script>
+    showData();
+    function showData(){
+      $.ajax({
+        method: "GET",
+        url: "./ajax/single-view.php",
+        success: function(res){
+          $("#tbody").html(res);
+        }
+      });
+    }
   </script>
 </body>
 

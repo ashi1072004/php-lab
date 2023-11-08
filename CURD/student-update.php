@@ -101,6 +101,17 @@
     $(document).ready(function () {
       $("#form").on("submit", function (event) {
         event.preventDefault();
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+          }
+        });
         // form validation
         let formData = new FormData(form);
         $.ajax({
@@ -113,17 +124,6 @@
             // alert(res);
             if (res == 1) {
               $("#form").trigger("reset");
-              const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                  toast.addEventListener('mouseenter', Swal.stopTimer)
-                  toast.addEventListener('mouseleave', Swal.resumeTimer)
-                }
-              })
               Toast.fire({
                 icon: 'success',
                 title: 'Data has been updated with new student pic!'
@@ -132,18 +132,6 @@
                 window.location.href = "./single-insert-view.php";
               }, 4000);
             } else if (res == 2) {
-              const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                  toast.addEventListener('mouseenter', Swal.stopTimer)
-                  toast.addEventListener('mouseleave', Swal.resumeTimer)
-                }
-              })
-              
               Toast.fire({
                 icon: 'warning',
                 title: 'Data is not updated!'
@@ -166,18 +154,6 @@
                 title: 'Invalid image!'
               })
             }else{
-              const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                  toast.addEventListener('mouseenter', Swal.stopTimer)
-                  toast.addEventListener('mouseleave', Swal.resumeTimer)
-                }
-              })
-              
               Toast.fire({
                 icon: 'success',
                 title: 'Data has been updated with old student pic!'

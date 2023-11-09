@@ -65,9 +65,10 @@
                     <div class="mb-3">
                         <input type="number" class="inp" name="srollno" value="<?php echo $fetch['srollno']?>" placeholder="Enter Your Roll No" required>
                     </div>
+                    <!-- Hidden ID -->
+                    <input type="hidden" class="inp" name="sid" value="<?php echo $fetch['sid']?>">
                     <div class="mt-5 mb-3">
                         <input type="text" class="inp" name="sname" value="<?php echo $fetch['sname']?>" placeholder="Enter Your Name" required>
-                        <input type="hidden" class="inp" name="sid" value="<?php echo $fetch['sid']?>">
                     </div>
                     <div class="mt-5 mb-3">
                       <input type="text" class="inp" name="sfname" value="<?php echo $fetch['sfname']?>" placeholder="Enter Your Father Name" required>

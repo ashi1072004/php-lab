@@ -40,7 +40,7 @@
                     $run = mysqli_query($conn, "SELECT * FROM `multistd` ORDER BY `srollno`");
                     while( $select = mysqli_fetch_array($run, MYSQLI_ASSOC)){
                     // echo "<pre>";
-                    // print_r($fet);
+                    // print_r($select);
                     // echo "</pre>";
                     ?>
                     <tr>

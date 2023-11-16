@@ -22,7 +22,7 @@ include('./connection.php');
         <div class="container-fluid p-0">
             <div class="row justify-content-center m-0">
                 <div class="col-md-8 col-lg-5 col-sm-11 my-md-3 my-lg-0 bg-light">
-                    <form id="form" class="p-5">
+                    <form id="form" class="p-5" enctype="multipart/form-data">
                         <p class="msg text-center"></p>
                         <h2 class="text-center">Enter Data</h2>
                         <div class="mt-5 mb-3">
@@ -162,7 +162,9 @@ include('./connection.php');
             }
             $("#form").on("submit", function(e) {
                 e.preventDefault();
-                let jsonObj = jsonData("#form");
+                let jsonObj = new FormData(form);
+                console.log(jsonObj);
+                // alert(jsonObj);
                 if (!jsonObj) {
                     message("Please! Fill all inputs", false);
                 } else {
@@ -173,7 +175,7 @@ include('./connection.php');
                         contentType: false,
                         processData: false,
                         success: function(res) {
-                            alert(res.status);
+                            console.log(res.status);
                             if (res.status == 1) {
                                 $("#form").trigger("reset");
                                 Toast.fire({

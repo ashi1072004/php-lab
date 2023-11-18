@@ -89,7 +89,7 @@
         $("#load-table").html("");
         $.ajax({
           type: "GET",
-          url: "http://localhost/php-rest-api-html/api-fetch-all.php",
+          url: "http://localhost/php-lab/php-rest-api-html/api-fetch-all.php",
           success: function (res) {
             // console.log(res);
             if (res.status == false) {
@@ -150,7 +150,7 @@
         } else {
           $.ajax({
             type: "POST",
-            url: "http://localhost/php-rest-api-html/api-insert.php",
+            url: "http://localhost/php-lab/php-rest-api-html/api-insert.php",
             data: jsonObj,
             success: function (res) {
               message(res.message, res.status);
@@ -170,7 +170,7 @@
           let btn = this;
           $.ajax({
             type: "POST",
-            url: "http://localhost/php-rest-api-html/api-delete.php",
+            url: "http://localhost/php-lab/php-rest-api-html/api-delete.php",
             data: myJSON,
             success: function (res) {
               message(res.message, res.status);
@@ -189,7 +189,7 @@
         let myJSON = JSON.stringify({ sid: id });
         $.ajax({
           type: "POST",
-          url: "http://localhost/php-rest-api-html/api-fetch-single.php",
+          url: "http://localhost/php-lab/php-rest-api-html/api-fetch-single.php",
           data: myJSON,
           success: function (res) {
             // console.log(res);
@@ -214,7 +214,7 @@
         } else {
           $.ajax({
             type: "PUT",
-            url: "http://localhost/php-rest-api-html/api-update.php",
+            url: "http://localhost/php-lab/php-rest-api-html/api-update.php",
             data: jsonObj,
             success: function (res) {
               message(res.message, res.status);
@@ -232,7 +232,7 @@
         $("#load-table").html("");
         $.ajax({
           type: "GET",
-          url: "http://localhost/php-rest-api-html/api-search.php?search=" + search,
+          url: "http://localhost/php-lab/php-rest-api-html/api-search.php?search=" + search,
           success: function (res) {
             if (res.status == false) {
               $("#load-table").html("");

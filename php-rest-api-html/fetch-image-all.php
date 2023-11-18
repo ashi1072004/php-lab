@@ -2,12 +2,9 @@
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 
-$data = json_decode(file_get_contents("php://input"), true);
-$sid = $data['sid'];
-
 include("config.php");
 
-$sql = "SELECT * FROM `student` WHERE `sid` = '{$sid}'";
+$sql = "SELECT * FROM `tbl_image` ";
 $run = mysqli_query($conn, $sql);
 if (!$run) {
     die("SQL query failed");

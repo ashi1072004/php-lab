@@ -112,19 +112,18 @@
       loadTable();
 
       //Insert New Record
-      function jsonData(form) {
-        // let formdata = new FormData(addForm);
-        let arr = $(form).serializeArray();
-        let obj = {};
-        for (let a in arr) {
-          if (arr[a].value == "") {
-            return false;
-          }
-          obj[arr[a].name] = arr[a].value;
-        }
-        let json_string = JSON.stringify(obj);
-        return json_string;
-      }
+      // function jsonData(form) {
+      //   let arr = $(form).serializeArray();
+      //   let obj = {};
+      //   for (let a in arr) {
+      //     if (arr[a].value == "") {
+      //       return false;
+      //     }
+      //     obj[arr[a].name] = arr[a].value;
+      //   }
+      //   let json_string = JSON.stringify(obj);
+      //   return json_string;
+      // }
 
       function message(msg, status) {
         if (status) {
@@ -144,7 +143,11 @@
 
       $("#save-button").on("click", function (e) {
         e.preventDefault();
-        let jsonObj = jsonData("#addForm");
+        // let jsonObj = jsonData("#addForm");
+        let formdata = new FormData(addForm);
+        let obj = Object.fromEntries(formdata.entries());
+        let jsonObj = JSON.stringify(obj);
+        // console.log(jsonObj);
         if (!jsonObj) {
           message("Please! Fill all inputs", false);
         } else {

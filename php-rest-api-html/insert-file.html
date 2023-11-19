@@ -41,12 +41,12 @@
     <div id="modal">
         <div id="modal-form">
             <h2>Edit Form</h2>
-            <form action="" id="edit-form">
+            <form action="" id="editform">
                 <table cellpadding="10px" width="100%">
                     <tr>
                         <td width="90px">Select Image</td>
                         <td><input type="file" name="sendimage" id="edit-name" required>
-                            <input type="text" name="sid" id="edit-id" hidden="">
+                            <input type="text" name="id" id="edit-id" hidden="">
                         </td>
                     </tr>
                     <tr>
@@ -87,19 +87,6 @@
             }
             loadTable();
 
-            //Insert New Record
-            function jsonData(form) {
-                let formdata = new FormData(addForm);
-                // let arr = $(form).serializeArray();
-                console.log(formdata);
-                // let obj = {};
-                // for (let a in arr) {
-                //     obj[arr[a].name] = arr[a].value;
-                // }
-                // let json_string = JSON.stringify(obj);
-                // return json_string;
-            }
-
             function message(msg, status) {
                 if (status) {
                     $("#success-message").html(msg).slideDown();
@@ -118,11 +105,30 @@
 
             $("#save-button").on("click", function (e) {
                 e.preventDefault();
-                let jsonObj = jsonData("#addForm");
+                let formdata = new FormData(addForm);
+                // let obj = Object.fromEntries(formdata.entries());
+                // console.log(obj);
+                // let obj = {};
+                // formdata.forEach(function (value, key) {
+                //     if (value instanceof File) {
+                //         obj[key] = {
+                //             name: value.name,
+                //             type: value.type,
+                //             size: value.size,
+                //             base64: 'data:' + value.type + ';base64,' + btoa(value),
+                //         };
+                //     } else {
+                //         obj[key] = value;
+                //     }
+                // });
+                // let jsonObj = JSON.stringify(obj);
+                // console.log(jsonObj);
                 $.ajax({
                     type: "POST",
                     url: "http://localhost/php-lab/php-rest-api-html/api-upload-image.php",
-                    data: jsonObj,
+                    data: formdata,
+                    contentType: false,
+                    processData: false,
                     success: function (res) {
                         console.log(res);
                         message(res.message, res.status);
@@ -137,11 +143,11 @@
             $(document).on("click", ".delete-btn", function () {
                 if (confirm("Do you really want to delete this record?")) {
                     let id = $(this).data("del");
-                    let myJSON = JSON.stringify({ sid: id });
+                    let myJSON = JSON.stringify({ id: id });
                     let btn = this;
                     $.ajax({
-                        type: "POST",
-                        url: "http://localhost/php-rest-api-html/api-delete.php",
+                        type: "DELETE",
+                        url: "http://localhost/php-lab/php-rest-api-html/image-delete.php",
                         data: myJSON,
                         success: function (res) {
                             message(res.message, res.status);
@@ -157,17 +163,15 @@
             $(document).on("click", ".edit-btn", function () {
                 $("#modal").show();
                 let id = $(this).data("up");
-                let myJSON = JSON.stringify({ sid: id });
+                let myJSON = JSON.stringify({ id: id });
                 $.ajax({
                     type: "POST",
-                    url: "http://localhost/php-rest-api-html/api-fetch-single.php",
+                    url: "http://localhost/php-lab/php-rest-api-html/fetch-image-single.php",
                     data: myJSON,
                     success: function (res) {
                         // console.log(res);
-                        $("#edit-id").val(res[0].sid);
-                        $("#edit-name").val(res[0].sname);
-                        $("#edit-age").val(res[0].sage);
-                        $("#edit-city").val(res[0].scity);
+                        $("#edit-id").val(res[0].id);
+                        // $("#edit-name").val(res[0].name);
                     }
                 });
             });
@@ -179,46 +183,18 @@
             //Update Record
             $("#edit-submit").on("click", function (e) {
                 e.preventDefault();
-                let jsonObj = jsonData("#edit-form");
-                if (!jsonObj) {
-                    message("Please! Fill all inputs", false);
-                } else {
-                    $.ajax({
-                        type: "PUT",
-                        url: "http://localhost/php-rest-api-html/api-update.php",
-                        data: jsonObj,
-                        success: function (res) {
-                            message(res.message, res.status);
-                            if (res.status) {
-                                $("#modal").hide();
-                                loadTable();
-                            }
-                        }
-                    });
-                }
-            });
-            //Live Search Record
-            $("#search").on("keyup", function () {
-                let search = $(this).val();
-                $("#load-table").html("");
+                let formdata = new FormData(editform);
                 $.ajax({
-                    type: "GET",
-                    url: "http://localhost/php-rest-api-html/api-search.php?search=" + search,
+                    type: "PUT",
+                    url: "http://localhost/php-lab/php-rest-api-html/update-image.php",
+                    data: formdata,
+                    contentType: false,
+                    processData: false,
                     success: function (res) {
-                        if (res.status == false) {
-                            $("#load-table").html("");
-                            $("#load-table").append("<tr><td colspan='6'><h2>" + res.message + "</h2></td></tr>");
-                        } else {
-                            $.each(res, function (key, value) {
-                                $("#load-table").append(`<tr>
-                  <td class="center">${value.sid}</td>
-                  <td>${value.sname}</td>
-                  <td>${value.sage}</td>
-                  <td>${value.scity}</td>
-                  <td class="center"><button class="edit-btn" data-up="${value.sid}">Edit</button></td>
-                  <td class="center"><button class="delete-btn" data-del="${value.sid}">Delete</button></td>
-                </tr>`);
-                            });
+                        message(res.message, res.status);
+                        if (res.status) {
+                            $("#modal").hide();
+                            loadTable();
                         }
                     }
                 });

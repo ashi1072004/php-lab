@@ -19,9 +19,9 @@ $semail = $data['semail'];
 include('../connection.php');
 $spic = $_FILES['spic']['name'];
 $sdate = date("Y-m-d");
-$exe = pathinfo($spic, PATHINFO_EXTENSION);
+$exe = strtolower(pathinfo($spic, PATHINFO_EXTENSION));
 // echo $exe;
-$extn = array('jpg', 'png', 'jpeg', 'JPG', 'PNG', 'JPEG');
+$extn = array('jpg', 'png', 'jpeg');
 if (in_array($exe, $extn)) {
     $p = rand(10000, 99999) . "." . $exe;
     $sql = "INSERT INTO `std`(`teachid`, `classtime`, `srollno`, `sname`, `sfname`, `smobile`, `scnic`, `semail`, `spic`, `sdate`)VALUES('$teachid', '$classtime', '$srollno', '$sname', '$sfname', '$smobile', '$scnic', '$semail', '$p', '$sdate')";

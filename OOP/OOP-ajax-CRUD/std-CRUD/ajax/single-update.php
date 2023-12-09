@@ -1,46 +1,38 @@
 <?php
-header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: POST');
-header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, Content-Type, Access-Control-Allow-Methods, Authorization, X-Requested-With');
+include('../database.php');
+$obj = new Database();
 
-$data = json_decode(file_get_contents("php://input"), true);
-$sid = $data['sid'];
-$teachid = $data['teachid'];
-$classtime = $data['classtime'];
-$srollno = $data['srollno'];
-$sname = $data['sname'];
-$sfname = $data['sfname'];
-$smobile = $data['smobile'];
-$scnic = $data['scnic'];
-$semail = $data['semail'];
-
-include('../connection.php');
-
-$std = "SELECT * FROM `std` WHERE `sid` = '$sid' ";
-$updtrun = mysqli_query($conn, $std);
-$fetch = mysqli_fetch_assoc($updtrun);
-
+$sid = $_POST['sid'];
+$teachid = $obj->escapeString($_POST['teachid']);
+$classtime = $obj->escapeString($_POST['classtime']);
+$srollno = $obj->escapeString($_POST['srollno']);
+$sname = $obj->escapeString($_POST['sname']);
+$sfname = $obj->escapeString($_POST['sfname']);
+$smobile = $obj->escapeString($_POST['smobile']);
+$scnic = $obj->escapeString($_POST['scnic']);
+$semail = $obj->escapeString($_POST['semail']);
 $spic = $_FILES['spic']['name'];
-$sdate = date("Y-m-d");
-// echo '<pre>';
-// print_r($spic);
-// echo '</pre>';
+
+$obj->select('std', '`spic`', null, "`sid`='$sid'", null, null);
+$res = $obj->getRes();
+$pic = $res[0][0]['spic'];
+
 if (!empty($spic)) {
     // if new pic inserted
-    $exe = pathinfo($spic, PATHINFO_EXTENSION);
-    // echo $exe;
-    $extn = array('jpg', 'png', 'jpeg', 'JPG', 'PNG', 'JPEG');
+    $exe = strtolower(pathinfo($spic, PATHINFO_EXTENSION));
+    $extn = array('jpg', 'png', 'jpeg');
     if (in_array($exe, $extn)) {
         // Delete old pic
-        unlink("../singleimg/" . $fetch['spic']);
+        unlink('../img/' . $pic);
         $p = rand(10000, 99999) . "." . $exe;
         // Update record
-        $sql = "UPDATE `std` SET `classtime`='$classtime', `teachid`='$teachid', `srollno`='$srollno', `sname`='$sname', `sfname`='$sfname', `smobile`='$smobile', `scnic`='$scnic', `semail`='$semail', `spic`='$p', `sdate`='$sdate' WHERE `sid`='$sid' ";
-        $run = mysqli_query($conn, $sql);
-        if ($run) {
+        $params = ['teachid' => $teachid, 'classtime' => $classtime, 'srollno' => $srollno, 'sname' => $sname, 'sfname' => $sfname, 'smobile' => $smobile, 'scnic' => $scnic, 'semail' => $semail, 'spic' => $p];
+        $obj->update('std', $params, "`sid`='$sid'");
+        $res = $obj->getRes();
+
+        if (isset($res[0])) {
             // Upload new pic
-            move_uploaded_file($_FILES['spic']['tmp_name'], '../singleimg/' . $p);
+            move_uploaded_file($_FILES['spic']['tmp_name'], '../img/' . $p);
             echo json_encode(array("message" => "Data updated with new student pic", "status" => 1));
         } else {
             echo json_encode(array("message" => "Data not updated", "status" => 2));
@@ -50,10 +42,11 @@ if (!empty($spic)) {
     }
 } else {
     // if new pic not inserted
-    // $p = $fetch['spic'];
-    $sql = "UPDATE `std` SET `classtime`='$classtime', `teachid`='$teachid', `srollno`='$srollno', `sname`='$sname', `sfname`='$sfname', `smobile`='$smobile', `scnic`='$scnic', `semail`='$semail', `sdate`='$sdate' WHERE `sid`='$sid' ";
-    $run = mysqli_query($conn, $sql);
-    if ($run) {
+    $params = ['teachid' => $teachid, 'classtime' => $classtime, 'srollno' => $srollno, 'sname' => $sname, 'sfname' => $sfname, 'smobile' => $smobile, 'scnic' => $scnic, 'semail' => $semail];
+    $obj->update('std', $params, "`sid`='$sid'");
+    $res = $obj->getRes();
+
+    if (isset($res[0])) {
         echo json_encode(array("message" => "Data updated with old student pic", "status" => 4));
     } else {
         echo json_encode(array("message" => "Data not updated", "status" => 2));

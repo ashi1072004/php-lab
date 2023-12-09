@@ -9,11 +9,11 @@ if (isset($_POST['sub'])) {
   $scnic = mysqli_real_escape_string($conn, $_POST['scnic']);
   $semail = mysqli_real_escape_string($conn, $_POST['semail']);
   $spic = $_FILES['spic']['name'];
-  $stemppic = $_FILES['spic']['tmp_name'];
+  // $stemppic = $_FILES['spic']['tmp_name'];
   $sdate = date("Y-m-d");
-  echo '<pre>';
-  print_r($stemppic);
-  echo '</pre>';
+  // echo '<pre>';
+  // print_r($stemppic);
+  // echo '</pre>';
   $extn = array('jpg', 'png', 'jpeg', 'JPG', 'PNG', 'JPEG');
   $p = array();
   // echo var_dump(isset($spic));

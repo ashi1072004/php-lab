@@ -33,7 +33,7 @@ $obj = new Database();
                         <p class="msg text-center"></p>
                         <h2 class="text-center">Enter Data</h2>
                         <div class="mt-5 mb-3">
-                            <select class="form-select" name="teachid">
+                            <select id="teachid" class="form-select" name="teachid">
                                 <?php
                                 $obj->sql("SELECT * FROM `teacher`");
                                 $res = $obj->getRes();
@@ -53,7 +53,7 @@ $obj = new Database();
                             </select>
                         </div>
                         <div class="mt-5 mb-3">
-                            <select class="form-select" name="classtime">
+                            <select id="classtime" class="form-select" name="classtime">
                                 <?php
                                 $obj->sql("SELECT * FROM `classtime`");
                                 $res = $obj->getRes();
@@ -73,7 +73,8 @@ $obj = new Database();
                                 ?>
                             </select>
                         </div>
-                        <div class="mb-3">
+                        <input type="hidden" class="form-control" name="sid">
+                        <div class="mt-5 mb-3">
                             <input type="number" class="form-control" name="srollno" placeholder="Enter Your Roll No" required>
                         </div>
                         <div class="mt-5 mb-3">
@@ -116,7 +117,7 @@ $obj = new Database();
                                     <th>Student Email</th>
                                     <th>Student Admission Date</th>
                                     <!-- <th>#</th> -->
-                                    <th>Teacher ID</th>
+                                    <!-- <th>Teacher ID</th> -->
                                     <th>Teacher Pic</th>
                                     <th>Teacher Name</th>
                                     <!-- <th>Class ID</th> -->
@@ -157,51 +158,75 @@ $obj = new Database();
                 }
             });
 
-            function jsonData(form) {
-                let arr = $(form).serializeArray();
-                let obj = {};
-                for (let a in arr) {
-                    if (arr[a].value == "") {
-                        return false;
-                    }
-                    obj[arr[a].name] = arr[a].value;
-                }
-                console.log(obj);
-                let json_string = JSON.stringify(obj);
-                return json_string;
-            }
             $("#form").on("submit", function(e) {
                 e.preventDefault();
-                let jsonObj = new FormData(form);
-                console.log(jsonObj);
-                // alert(jsonObj);
-                if (!jsonObj) {
-                    message("Please! Fill all inputs", false);
-                } else {
+                let formdata = new FormData(form);
+                if ($('#form').attr('action') == 'edit') {
+                    // Update Data
                     $.ajax({
                         type: "POST",
-                        url: "http://localhost/php-lab/CURD/ajax/single-insert.php",
-                        data: jsonObj,
+                        url: "./ajax/single-update.php",
+                        data: formdata,
                         contentType: false,
                         processData: false,
                         success: function(res) {
-                            console.log(res.status);
+                            console.log(res);
+                            res = JSON.parse(res);
                             if (res.status == 1) {
                                 $("#form").trigger("reset");
                                 Toast.fire({
                                     icon: 'success',
-                                    title: 'Data has been inserted!'
+                                    title: res.message
+                                });
+                                showData();
+                                $('#form').attr('action', '');
+                            } else if (res.status == 2) {
+                                Toast.fire({
+                                    icon: 'error',
+                                    title: res.message
+                                });
+                            } else if (res.status == 4) {
+                                $("#form").trigger("reset");
+                                Toast.fire({
+                                    icon: 'warning',
+                                    title: res.message
+                                });
+                                showData();
+                                $('#form').attr('action', '');
+                            } else {
+                                Toast.fire({
+                                    icon: 'warning',
+                                    title: res.message
+                                });
+                            }
+                        }
+                    });
+                } else {
+                    // Insert Data
+                    $.ajax({
+                        type: "POST",
+                        url: "./ajax/single-insert.php",
+                        data: formdata,
+                        contentType: false,
+                        processData: false,
+                        success: function(res) {
+                            res = JSON.parse(res);
+                            if (res.status == 1) {
+                                $("#form").trigger("reset");
+                                Toast.fire({
+                                    icon: 'success',
+                                    title: res.message
                                 });
                                 showData();
                             } else if (res.status == 2) {
                                 Toast.fire({
-                                    icon: 'warning',
-                                    title: 'Data has not been inserted!'
+                                    icon: 'error',
+                                    title: res.message
                                 });
                             } else {
                                 Toast.fire({
                                     icon: 'warning',
-                                    title: 'Invalid image!'
+                                    title: res.message
                                 });
                             }
                         }
@@ -216,7 +241,6 @@ $obj = new Database();
                     url: "./ajax/single-view.php",
                     success: function(res) {
                         res = JSON.parse(res);
-                        // console.log(res);
                         if (res.status == false) {
                             $("#tbody").append("<tr><td colspan='15'><h2>" + res.message + "</h2></td></tr>");
                         } else {
@@ -230,12 +254,11 @@ $obj = new Database();
                                     <td>${value.scnic}</td>
                                     <td>${value.semail}</td>
                                     <td>${value.sdate}</td>
-                                    <td>${value.tid}</td>
                                     <td><img src="./img/${value.tpic}" alt="No Img Found" width="70" height="70"></td>
                                     <td>${value.tname}</td>
                                     <td>${value.cttime}</td>
                                     <td>${value.cname}</td>
-                                    <td><a href="./student-update.php?sid=${value.sid}" class="btn btn-success">Update</a></td>
+                                    <td><button type="button" data-edit="${value.sid}" class="btn btn-success edit">Update</button></td>
                                     <td><button type="button" data-del="${value.sid}" class="btn btn-danger delete">Delete</button></td>
                                 </tr>`);
                             });
@@ -244,33 +267,66 @@ $obj = new Database();
                 });
             };
             showData();
+            // Delete Data
             $(document).on("click", ".delete", function() {
                 var id = $(this).data("del");
                 // alert(id);
-                let myJSON = JSON.stringify({
-                    sid: id
-                });
                 var btn = this;
-                $.ajax({
-                    type: "POST",
-                    url: "http://localhost/php-lab/CURD/ajax/single-del.php",
-                    data: myJSON,
-                    success: function(res) {
-                        alert(res);
-                        if (res.status) {
-                            Toast.fire({
-                                icon: 'success',
-                                title: 'Data deleted!'
-                            });
-                            $(btn).closest("tr").fadeOut();
-                        } else {
-                            Toast.fire({
-                                icon: 'error',
-                                title: 'Data not deleted!'
-                            });
+                if (confirm("Do you really want to delete this student?")) {
+                    $.ajax({
+                        type: "GET",
+                        url: "./ajax/single-del.php",
+                        data: {
+                            'sid': id
+                        },
+                        success: function(res) {
+                            res = JSON.parse(res);
+                            console.log(res);
+                            if (res.status) {
+                                Toast.fire({
+                                    icon: 'success',
+                                    title: 'Data deleted!'
+                                });
+                                $(btn).closest("tr").fadeOut();
+                            } else {
+                                Toast.fire({
+                                    icon: 'error',
+                                    title: 'Data not deleted!'
+                                });
+                            }
                         }
+                    });
+                }
+            });
+        });
+        // Edit Data
+        $('body').on('click', '.edit', function() {
+            var itemId = $(this).data('edit');
+            $.ajax({
+                url: "./ajax/single-view.php",
+                type: 'GET',
+                data: {
+                    'sid': itemId
+                },
+                success: function(res) {
+                    var res = JSON.parse(res);
+                    // console.log(res);
+                    if (!(res.status == false)) {
+                        $('#form').attr('action', 'edit');
+                        $.each(res, function(key, value) {
+                            $('[name=sid]').val(value.sid);
+                            $('[name=teachid]').val(value.teachid);
+                            $('[name=classtime]').val(value.classtime);
+                            $('[name=srollno]').val(value.srollno);
+                            $('[name=sname]').val(value.sname);
+                            $('[name=sfname]').val(value.sfname);
+                            $('[name=smobile]').val(value.smobile);
+                            $('[name=scnic]').val(value.scnic);
+                            $('[name=semail]').val(value.semail);
+                            window.scrollTo(0, 0);
+                        });
                     }
-                });
+                }
             });
         });
     </script>

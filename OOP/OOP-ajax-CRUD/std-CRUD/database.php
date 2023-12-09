@@ -172,8 +172,13 @@ class Database
             } else {
                 array_push($this->res, $this->conn->error);
             }
-            // $sql .= " WHERE `$field` = '$value' ";
         }
+    }
+
+    public function escapeString($data)
+    {
+        $data = htmlspecialchars(stripslashes(trim($data)));
+        return $this->conn->real_escape_string($data);
     }
 
     public function __destruct()

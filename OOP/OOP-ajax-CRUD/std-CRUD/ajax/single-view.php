@@ -1,9 +1,14 @@
 <?php
 include('../database.php');
 $obj = new Database();
+if (isset($_GET['sid'])) {
+    $sid = $_GET['sid'];
+    $obj->select('std', '*', null, "`sid`='$sid'", null, null);
+} else {
+    $join = '`teacher` ON std.teachid = teacher.tid  INNER JOIN `classtime` ON std.classtime=classtime.ctid';
+    $obj->select('std', '*', $join, null, null, null);
+}
 
-$join = '`teacher` ON std.teachid = teacher.tid  INNER JOIN `classtime` ON std.classtime=classtime.ctid';
-$obj->select('std', '*', $join, null, null, null);
 $res = $obj->getRes();
 // echo '<pre>';
 // print_r($res);

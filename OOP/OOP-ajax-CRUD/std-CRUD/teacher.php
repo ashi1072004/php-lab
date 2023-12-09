@@ -2,17 +2,12 @@
 include('./database.php');
 $obj = new Database();
 
-// $obj->sql("SELECT * FROM `teacher`");
-// $res = $obj->getRes();
-// echo '<pre>';
-// print_r($res);
-// echo '</pre>';
 ?>
 <!doctype html>
 <html lang="en">
 
 <head>
-    <title>Student Insert</title>
+    <title>Teacher</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -35,105 +30,52 @@ $obj = new Database();
                 <div class="col-md-8 col-lg-5 col-sm-11 my-md-3 my-lg-0 bg-light">
                     <form id="form" class="py-3 px-5">
                         <p class="msg text-center"></p>
-                        <h2 class="text-center">Enter Student</h2>
-                        <div class="mt-5 mb-3">
-                            <label class="px-2">Select Teacher</label>
-                            <select id="teachid" class="form-select" name="teachid">
-                                <?php
-                                $obj->sql("SELECT * FROM `teacher`");
-                                $res = $obj->getRes();
-                                ?>
-                                <option selected>None</option>
-                                <?php
-                                foreach ($res as $key1 => $val1) {
-                                    foreach ($val1 as $key2 => $val2) {
-                                ?>
-                                        <option value="<?php echo $val2['tid'] ?>">
-                                            <?php echo $val2['tname'] ?>
-                                        </option>
-                                <?php
-                                    }
-                                }
-                                ?>
-                            </select>
-                        </div>
-                        <div class="mt-5 mb-3">
-                            <label class="px-2">Select Class Time</label>
-                            <select id="classtime" class="form-select" name="classtime">
-                                <?php
-                                $obj->sql("SELECT * FROM `classtime`");
-                                $res = $obj->getRes();
-                                ?>
-                                <option selected>None</option>
-                                <?php
-                                foreach ($res as $key1 => $val1) {
-                                    foreach ($val1 as $key2 => $val2) {
-                                ?>
-                                        <option value="<?php echo $val2['ctid'] ?>">
-                                            <?php echo $val2['cttime']; ?> [
-                                            <?php echo $val2['cname']; ?>]
-                                        </option>
-                                <?php
-                                    }
-                                }
-                                ?>
-                            </select>
-                        </div>
-                        <input type="hidden" class="form-control" name="sid">
-                        <div class="mt-5 mb-3">
-                            <label class="px-2">Enter Roll No</label>
-                            <input type="number" class="form-control" name="srollno" required>
-                        </div>
+                        <h2 class="text-center">Enter Teacher</h2>
+                        <input type="hidden" class="form-control" name="tid">
                         <div class="mt-5 mb-3">
                             <label class="px-2">Enter Name</label>
-                            <input type="text" class="form-control" name="sname" required>
+                            <input type="text" class="form-control" name="tname" required>
                         </div>
                         <div class="mt-5 mb-3">
                             <label class="px-2">Enter Father Name</label>
-                            <input type="text" class="form-control" name="sfname" required>
+                            <input type="text" class="form-control" name="tfname" required>
                         </div>
                         <div class="mt-5 mb-3">
                             <label class="px-2">Enter Mobile #</label>
-                            <input type="tel" class="form-control" name="smobile" required>
+                            <input type="tel" class="form-control" name="tmobile" required>
                         </div>
                         <div class="mt-5 mb-3">
                             <label class="px-2">Enter CNIC</label>
-                            <input type="number" class="form-control" name="scnic" required>
+                            <input type="number" class="form-control" name="tcnic" required>
                         </div>
                         <div class="mt-5 mb-3">
                             <label class="px-2">Enter Email</label>
-                            <input type="email" class="form-control" name="semail" required>
+                            <input type="email" class="form-control" name="temail" required>
                         </div>
                         <div class="mt-5 mb-3">
                             <label class="px-2">Choose Pic</label>
-                            <input type="file" class="form-control" name="spic">
+                            <input type="file" class="form-control" name="tpic">
                         </div>
                         <div class="my-3 text-center">
-                            <input type="submit" id="ssub" class="btn btn-primary px-4 py-2" name="ssub" value="Submit">
+                            <input type="submit" id="tsub" class="btn btn-primary px-4 py-2" name="tsub" value="Submit">
                         </div>
                         <hr>
                     </form>
                 </div>
                 <div class="col-md-12 col-lg-7 col-sm-12 my-3 my-lg-0 bg-light">
                     <div class="table-responsive mt-3">
-                        <h2 class="py-2 text-center">Student Record</h2>
+                        <h2 class="py-2 text-center">Teacher Record</h2>
                         <table class="table table-hover table-borderless align-middle" style="border: 2px solid lightgrey;">
                             <thead class="table-secondary">
                                 <tr>
-                                    <th>Student Roll no</th>
-                                    <th>Student Pic</th>
-                                    <th>Student Name</th>
-                                    <th>Student's Father Name</th>
-                                    <th>Student Mobile #</th>
-                                    <th>Student CNIC</th>
-                                    <th>Student Email</th>
-                                    <th>Admission Date</th>
                                     <!-- <th>Teacher ID</th> -->
                                     <th>Teacher Pic</th>
                                     <th>Teacher Name</th>
-                                    <!-- <th>Class ID</th> -->
-                                    <th>Class Time</th>
-                                    <th>Class Name</th>
+                                    <th>Teacher's Father Name</th>
+                                    <th>Teacher Mobile #</th>
+                                    <th>Teacher CNIC</th>
+                                    <th>Teacher Email</th>
+                                    <th>Joined</th>
                                     <th>Update</th>
                                     <th>Delete</th>
                                 </tr>
@@ -163,8 +105,7 @@ $obj = new Database();
                     </style>
                     <div id="pages" class="mt-3">
                         <?php
-                        $join = '`teacher` ON std.teachid = teacher.tid  INNER JOIN `classtime` ON std.classtime=classtime.ctid';
-                        echo $obj->pagination('std', $join, null, 5);
+                        echo $obj->pagination('teacher', null, null, 5);
                         ?>
                     </div>
                 </div>
@@ -198,7 +139,7 @@ $obj = new Database();
             $("#form").on("submit", function(e) {
                 e.preventDefault();
                 let formdata = new FormData(form);
-                formdata.append("ssub", true);
+                formdata.append("tsub", true);
                 if ($('#form').attr('action') == 'edit') {
                     // Update Data
                     $.ajax({
@@ -280,30 +221,24 @@ $obj = new Database();
                     method: "GET",
                     url: "./ajax/single-view.php",
                     data: {
-                        'sload': true
+                        'tload': true
                     },
                     success: function(res) {
-                        // console.log(res);
                         res = JSON.parse(res);
                         if (res.status == false) {
-                            $("#tbody").append("<tr><td colspan='15'><h2>" + res.message + "</h2></td></tr>");
+                            $("#tbody").html("<tr><td colspan='15'><h2>" + res.message + "</h2></td></tr>");
                         } else {
                             $.each(res, function(key, value) {
                                 $("#tbody").append(`<tr>
-                                    <td>${value.srollno}</td>
-                                    <td><img src="./img/${value.spic}" alt="No Img Found" width="70" height="70"></td>
-                                    <td>${value.sname}</td>
-                                    <td>${value.sfname}</td>
-                                    <td>${value.smobile}</td>
-                                    <td>${value.scnic}</td>
-                                    <td>${value.semail}</td>
-                                    <td>${value.sdate}</td>
                                     <td><img src="./img/${value.tpic}" alt="No Img Found" width="70" height="70"></td>
                                     <td>${value.tname}</td>
-                                    <td>${value.cttime}</td>
-                                    <td>${value.cname}</td>
-                                    <td><button type="button" data-edit="${value.sid}" class="btn btn-success edit">Update</button></td>
-                                    <td><button type="button" data-del="${value.sid}" class="btn btn-danger delete">Delete</button></td>
+                                    <td>${value.tfname}</td>
+                                    <td>${value.tmobile}</td>
+                                    <td>${value.tcnic}</td>
+                                    <td>${value.temail}</td>
+                                    <td>${value.tdate}</td>
+                                    <td><button type="button" data-edit="${value.tid}" class="btn btn-success edit">Update</button></td>
+                                    <td><button type="button" data-del="${value.tid}" class="btn btn-danger delete">Delete</button></td>
                                 </tr>`);
                             });
                         }
@@ -315,13 +250,13 @@ $obj = new Database();
                 var id = $(this).data("del");
                 // alert(id);
                 var btn = this;
-                if (confirm("Do you really want to delete this student?")) {
+                if (confirm("Do you really want to delete this data?")) {
                     $.ajax({
                         type: "GET",
                         url: "./ajax/single-del.php",
                         data: {
-                            'sid': id,
-                            'ssub': true
+                            'tid': id,
+                            'tsub': true
                         },
                         success: function(res) {
                             res = JSON.parse(res);
@@ -332,9 +267,10 @@ $obj = new Database();
                                     title: res.message
                                 });
                                 $(btn).closest("tr").fadeOut();
+                                showData();
                             } else {
                                 Toast.fire({
-                                    icon: 'error',
+                                    icon: 'warning',
                                     title: res.message
                                 });
                             }
@@ -350,8 +286,8 @@ $obj = new Database();
                 url: "./ajax/single-view.php",
                 type: 'GET',
                 data: {
-                    'sid': id,
-                    'sload': true
+                    'tid': id,
+                    'tload': true
                 },
                 success: function(res) {
                     var res = JSON.parse(res);
@@ -359,15 +295,12 @@ $obj = new Database();
                     if (!(res.status == false)) {
                         $('#form').attr('action', 'edit');
                         $.each(res, function(key, value) {
-                            $('[name=sid]').val(value.sid);
-                            $('[name=teachid]').val(value.teachid);
-                            $('[name=classtime]').val(value.classtime);
-                            $('[name=srollno]').val(value.srollno);
-                            $('[name=sname]').val(value.sname);
-                            $('[name=sfname]').val(value.sfname);
-                            $('[name=smobile]').val(value.smobile);
-                            $('[name=scnic]').val(value.scnic);
-                            $('[name=semail]').val(value.semail);
+                            $('[name=tid]').val(value.tid);
+                            $('[name=tname]').val(value.tname);
+                            $('[name=tfname]').val(value.tfname);
+                            $('[name=tmobile]').val(value.tmobile);
+                            $('[name=tcnic]').val(value.tcnic);
+                            $('[name=temail]').val(value.temail);
                             window.scrollTo(0, 0);
                         });
                     }

@@ -12,7 +12,7 @@ $obj = new Database();
 <html lang="en">
 
 <head>
-    <title>Student Insert</title>
+    <title>Student</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -22,28 +22,23 @@ $obj = new Database();
 </head>
 
 <body>
-    <header class="bg-secondary">
-        <div class="container py-3">
-            <a class="btn btn-sm btn-warning text-white mx-2 fw-bold" href="./student.php">Student CRUD</a>
-            <a class="btn btn-sm btn-warning text-white mx-2 fw-bold" href="./teacher.php">Teacher CRUD</a>
-            <a class="btn btn-sm btn-warning text-white mx-2 fw-bold" href="./teacher.php">Classes CRUD</a>
-        </div>
+    <header>
+        <!-- place navbar here -->
     </header>
     <main>
         <div class="container-fluid p-0">
             <div class="row justify-content-center m-0">
                 <div class="col-md-8 col-lg-5 col-sm-11 my-md-3 my-lg-0 bg-light">
-                    <form id="form" class="py-3 px-5">
+                    <form id="form" class="p-5">
                         <p class="msg text-center"></p>
-                        <h2 class="text-center">Enter Student</h2>
+                        <h2 class="text-center">Enter Data</h2>
                         <div class="mt-5 mb-3">
-                            <label class="px-2">Select Teacher</label>
                             <select id="teachid" class="form-select" name="teachid">
                                 <?php
                                 $obj->sql("SELECT * FROM `teacher`");
                                 $res = $obj->getRes();
                                 ?>
-                                <option selected>None</option>
+                                <option selected>Select Teacher</option>
                                 <?php
                                 foreach ($res as $key1 => $val1) {
                                     foreach ($val1 as $key2 => $val2) {
@@ -58,13 +53,12 @@ $obj = new Database();
                             </select>
                         </div>
                         <div class="mt-5 mb-3">
-                            <label class="px-2">Select Class Time</label>
                             <select id="classtime" class="form-select" name="classtime">
                                 <?php
                                 $obj->sql("SELECT * FROM `classtime`");
                                 $res = $obj->getRes();
                                 ?>
-                                <option selected>None</option>
+                                <option selected>Select Class Time</option>
                                 <?php
                                 foreach ($res as $key1 => $val1) {
                                     foreach ($val1 as $key2 => $val2) {
@@ -81,53 +75,48 @@ $obj = new Database();
                         </div>
                         <input type="hidden" class="form-control" name="sid">
                         <div class="mt-5 mb-3">
-                            <label class="px-2">Enter Roll No</label>
-                            <input type="number" class="form-control" name="srollno" required>
+                            <input type="number" class="form-control" name="srollno" placeholder="Enter Your Roll No" required>
                         </div>
                         <div class="mt-5 mb-3">
-                            <label class="px-2">Enter Name</label>
-                            <input type="text" class="form-control" name="sname" required>
+                            <input type="text" class="form-control" name="sname" placeholder="Enter Your Name" required>
                         </div>
                         <div class="mt-5 mb-3">
-                            <label class="px-2">Enter Father Name</label>
-                            <input type="text" class="form-control" name="sfname" required>
+                            <input type="text" class="form-control" name="sfname" placeholder="Enter Your Father Name" required>
                         </div>
                         <div class="mt-5 mb-3">
-                            <label class="px-2">Enter Mobile #</label>
-                            <input type="tel" class="form-control" name="smobile" required>
+                            <input type="tel" class="form-control" name="smobile" placeholder="Enter Your Mobile #" required>
                         </div>
                         <div class="mt-5 mb-3">
-                            <label class="px-2">Enter CNIC</label>
-                            <input type="number" class="form-control" name="scnic" required>
+                            <input type="number" class="form-control" name="scnic" placeholder="Enter Your CNIC" required>
                         </div>
                         <div class="mt-5 mb-3">
-                            <label class="px-2">Enter Email</label>
-                            <input type="email" class="form-control" name="semail" required>
+                            <input type="email" class="form-control" name="semail" placeholder="Your Email" required>
                         </div>
-                        <div class="mt-5 mb-3">
-                            <label class="px-2">Choose Pic</label>
+                        <div class="mt-5 mb-3 text-white">
                             <input type="file" class="form-control" name="spic">
                         </div>
                         <div class="my-3 text-center">
-                            <input type="submit" id="ssub" class="btn btn-primary px-4 py-2" name="ssub" value="Submit">
+                            <input type="submit" id="ssub" class="btn btn-primary px-4 py-2" name="sub" value="Submit">
                         </div>
                         <hr>
                     </form>
                 </div>
                 <div class="col-md-12 col-lg-7 col-sm-12 my-3 my-lg-0 bg-light">
-                    <div class="table-responsive mt-3">
+                    <div class="table-responsive mt-5">
                         <h2 class="py-2 text-center">Student Record</h2>
                         <table class="table table-hover table-borderless align-middle" style="border: 2px solid lightgrey;">
                             <thead class="table-secondary">
                                 <tr>
                                     <th>Student Roll no</th>
+                                    <!-- <th>Teacher ID</th> -->
                                     <th>Student Pic</th>
                                     <th>Student Name</th>
-                                    <th>Student's Father Name</th>
+                                    <th>Student Father Name</th>
                                     <th>Student Mobile #</th>
                                     <th>Student CNIC</th>
                                     <th>Student Email</th>
-                                    <th>Admission Date</th>
+                                    <th>Student Admission Date</th>
+                                    <!-- <th>#</th> -->
                                     <!-- <th>Teacher ID</th> -->
                                     <th>Teacher Pic</th>
                                     <th>Teacher Name</th>
@@ -198,7 +187,6 @@ $obj = new Database();
             $("#form").on("submit", function(e) {
                 e.preventDefault();
                 let formdata = new FormData(form);
-                formdata.append("ssub", true);
                 if ($('#form').attr('action') == 'edit') {
                     // Update Data
                     $.ajax({
@@ -279,16 +267,12 @@ $obj = new Database();
                 $.ajax({
                     method: "GET",
                     url: "./ajax/single-view.php",
-                    data: {
-                        'sload': true
-                    },
                     success: function(res) {
-                        // console.log(res);
                         res = JSON.parse(res);
-                        if (res.status == false) {
-                            $("#tbody").append("<tr><td colspan='15'><h2>" + res.message + "</h2></td></tr>");
+                        if (res[0].status == false) {
+                            $("#tbody").append("<tr><td colspan='15'><h2>" + res[0].message + "</h2></td></tr>");
                         } else {
-                            $.each(res, function(key, value) {
+                            $.each(res[0], function(key, value) {
                                 $("#tbody").append(`<tr>
                                     <td>${value.srollno}</td>
                                     <td><img src="./img/${value.spic}" alt="No Img Found" width="70" height="70"></td>
@@ -320,22 +304,21 @@ $obj = new Database();
                         type: "GET",
                         url: "./ajax/single-del.php",
                         data: {
-                            'sid': id,
-                            'ssub': true
+                            'sid': id
                         },
                         success: function(res) {
                             res = JSON.parse(res);
-                            // console.log(res);
+                            console.log(res);
                             if (res.status) {
                                 Toast.fire({
                                     icon: 'success',
-                                    title: res.message
+                                    title: 'Data deleted!'
                                 });
                                 $(btn).closest("tr").fadeOut();
                             } else {
                                 Toast.fire({
                                     icon: 'error',
-                                    title: res.message
+                                    title: 'Data not deleted!'
                                 });
                             }
                         }
@@ -345,13 +328,12 @@ $obj = new Database();
         });
         // Edit Data
         $('body').on('click', '.edit', function() {
-            var id = $(this).data('edit');
+            var itemId = $(this).data('edit');
             $.ajax({
                 url: "./ajax/single-view.php",
                 type: 'GET',
                 data: {
-                    'sid': id,
-                    'sload': true
+                    'sid': itemId
                 },
                 success: function(res) {
                     var res = JSON.parse(res);

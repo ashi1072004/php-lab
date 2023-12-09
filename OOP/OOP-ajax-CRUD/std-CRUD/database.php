@@ -83,8 +83,8 @@ class Database
             if ($limit != null) {
                 $url = $_SERVER['HTTP_REFERER'];
                 $url_components = parse_url($url);
-                parse_str($url_components['query'], $params);
-                if (isset($params['page'])) {
+                if (isset($url_components['query'])) {
+                    parse_str($url_components['query'], $params);
                     $page = $params['page'];
                 } else {
                     $page = 1;

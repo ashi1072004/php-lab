@@ -1,5 +1,5 @@
 <?php
-    include('./connection.php');
+include('./database.php');
 ?>
 <!doctype html>
 <html lang="en">
@@ -20,42 +20,42 @@
       <!-- Search Record -->
       <div class="col-12">
         <div class="table-responsive mt-5">
-            <h1 class="py-2 text-center">Student Record</h1>
-            <!-- <form>
+          <h1 class="py-2 text-center">Student Record</h1>
+          <!-- <form>
               <div class="input-group my-3 align-right">
                 <input type="search" class="form-control" name="search" placeholder="Search Record" aria-describedby="addon">
                 <span class="input-group-text" id="addon"><i class="fa-solid fa-magnifying-glass"></i></span>
               </div>
             </form> -->
 
-            <!-- <button type="button" class="btn btn-primary" onclick="showData()">Show Record</button> -->
-            <table class="table table-hover table-borderless align-middle">
-                <thead class="table-secondary">
-                    <tr>
-                        <!-- <th>#</th> -->
-                        <th>Teacher ID</th>
-                        <th>Teacher Pic</th>
-                        <th>Teacher Name</th>
-                        <!-- <th>Class ID</th> -->
-                        <th>Class Time</th>
-                        <th>Class Name</th>
-                        <th>Student Roll no</th>
-                        <!-- <th>Teacher ID</th> -->
-                        <th>Student Pic</th>
-                        <th>Student Name</th>
-                        <th>Student Father Name</th>
-                        <th>Student Mobile #</th>
-                        <th>Student CNIC</th>
-                        <th>Student Email</th>
-                        <th>Student Admission Date</th>
-                        <th>Update</th>
-                        <th>Delete</th>
-                    </tr>
-                </thead>
-                <tbody id="tbody">
-                  
-                </tbody>
-            </table>
+          <!-- <button type="button" class="btn btn-primary" onclick="showData()">Show Record</button> -->
+          <table class="table table-hover table-borderless align-middle">
+            <thead class="table-secondary">
+              <tr>
+                <!-- <th>#</th> -->
+                <th>Teacher ID</th>
+                <th>Teacher Pic</th>
+                <th>Teacher Name</th>
+                <!-- <th>Class ID</th> -->
+                <th>Class Time</th>
+                <th>Class Name</th>
+                <th>Student Roll no</th>
+                <!-- <th>Teacher ID</th> -->
+                <th>Student Pic</th>
+                <th>Student Name</th>
+                <th>Student Father Name</th>
+                <th>Student Mobile #</th>
+                <th>Student CNIC</th>
+                <th>Student Email</th>
+                <th>Student Admission Date</th>
+                <th>Update</th>
+                <th>Delete</th>
+              </tr>
+            </thead>
+            <tbody id="tbody">
+
+            </tbody>
+          </table>
         </div>
       </div>
       <div class="col-12 my-3 text-center">
@@ -64,22 +64,23 @@
       </div>
 
     </div>
-    
+
 
   </main>
-  
+
   <!-- Bootstrap JavaScript Libraries -->
   <script src="../files/popper.min.js"></script>
   <script src="../files/bootstrap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script>
-    $(document).ready(function(){
+    $(document).ready(function() {
       showData();
-      function showData(){
+
+      function showData() {
         $.ajax({
           method: "GET",
           url: "./ajax/single-view.php",
-          success: function(res){
+          success: function(res) {
             $("#tbody").html(res);
           }
         });
@@ -91,12 +92,14 @@
         $.ajax({
           type: "GET",
           url: "./ajax/single-del.php",
-          data: {"sid": sid},
-          success: function(res){
-              // alert(res);
-              if(res == 1){
-                  $(btn).closest("tr").fadeOut();
-              }
+          data: {
+            "sid": sid
+          },
+          success: function(res) {
+            // alert(res);
+            if (res == 1) {
+              $(btn).closest("tr").fadeOut();
+            }
           }
         });
       });

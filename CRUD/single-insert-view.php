@@ -170,7 +170,7 @@ include('./connection.php');
                 } else {
                     $.ajax({
                         type: "POST",
-                        url: "http://localhost/php-lab/CURD/ajax/single-insert.php",
+                        url: "http://localhost/php-lab/CRUD/ajax/single-insert.php",
                         data: jsonObj,
                         contentType: false,
                         processData: false,
@@ -203,7 +203,7 @@ include('./connection.php');
                 $("#tbody").html("");
                 $.ajax({
                     method: "GET",
-                    url: "http://localhost/php-lab/CURD/ajax/single-view.php",
+                    url: "http://localhost/php-lab/CRUD/ajax/single-view.php",
                     success: function(res) {
                         if (res.status == false) {
                             $("#tbody").append("<tr><td colspan='15'><h2>" + res.message + "</h2></td></tr>");
@@ -241,7 +241,7 @@ include('./connection.php');
                 var btn = this;
                 $.ajax({
                     type: "POST",
-                    url: "http://localhost/php-lab/CURD/ajax/single-del.php",
+                    url: "http://localhost/php-lab/CRUD/ajax/single-del.php",
                     data: myJSON,
                     success: function(res) {
                         alert(res);

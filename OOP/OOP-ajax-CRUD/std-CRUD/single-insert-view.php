@@ -1,5 +1,12 @@
 <?php
-include('./connection.php');
+include('./database.php');
+$obj = new Database();
+
+// $obj->sql("SELECT * FROM `teacher`");
+// $res = $obj->getRes();
+// echo '<pre>';
+// print_r($res);
+// echo '</pre>';
 ?>
 <!doctype html>
 <html lang="en">
@@ -11,7 +18,7 @@ include('./connection.php');
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS v5.2.1 -->
-    <link href="../files/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
 </head>
 
 <body>
@@ -22,23 +29,25 @@ include('./connection.php');
         <div class="container-fluid p-0">
             <div class="row justify-content-center m-0">
                 <div class="col-md-8 col-lg-5 col-sm-11 my-md-3 my-lg-0 bg-light">
-                    <form id="form" class="p-5" enctype="multipart/form-data">
+                    <form id="form" class="p-5">
                         <p class="msg text-center"></p>
                         <h2 class="text-center">Enter Data</h2>
                         <div class="mt-5 mb-3">
                             <select class="form-select" name="teachid">
                                 <?php
-                                $tsql = "SELECT * FROM `teacher`";
-                                $trun = mysqli_query($conn, $tsql);
+                                $obj->sql("SELECT * FROM `teacher`");
+                                $res = $obj->getRes();
                                 ?>
                                 <option selected>Select Teacher</option>
                                 <?php
-                                while ($fetch = mysqli_fetch_assoc($trun)) {
+                                foreach ($res as $key1 => $val1) {
+                                    foreach ($val1 as $key2 => $val2) {
                                 ?>
-                                    <option value="<?php echo $fetch['tid']; ?>">
-                                        <?php echo $fetch['tname']; ?>
-                                    </option>
+                                        <option value="<?php echo $val2['tid'] ?>">
+                                            <?php echo $val2['tname'] ?>
+                                        </option>
                                 <?php
+                                    }
                                 }
                                 ?>
                             </select>
@@ -46,18 +55,20 @@ include('./connection.php');
                         <div class="mt-5 mb-3">
                             <select class="form-select" name="classtime">
                                 <?php
-                                $csql = "SELECT * FROM `classtime`";
-                                $crun = mysqli_query($conn, $csql);
+                                $obj->sql("SELECT * FROM `classtime`");
+                                $res = $obj->getRes();
                                 ?>
                                 <option selected>Select Class Time</option>
                                 <?php
-                                while ($cfetch = mysqli_fetch_assoc($crun)) {
+                                foreach ($res as $key1 => $val1) {
+                                    foreach ($val1 as $key2 => $val2) {
                                 ?>
-                                    <option value="<?php echo $cfetch['ctid']; ?>">
-                                        <?php echo $cfetch['cttime']; ?> [
-                                        <?php echo $cfetch['cname']; ?>]
-                                    </option>
+                                        <option value="<?php echo $val2['ctid'] ?>">
+                                            <?php echo $val2['cttime']; ?> [
+                                            <?php echo $val2['cname']; ?>]
+                                        </option>
                                 <?php
+                                    }
                                 }
                                 ?>
                             </select>
@@ -126,8 +137,8 @@ include('./connection.php');
         <!-- place footer here -->
     </footer>
     <!-- Bootstrap JavaScript Libraries -->
-    <script src="../files/popper.min.js"></script>
-    <script src="../files/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
@@ -147,7 +158,6 @@ include('./connection.php');
             });
 
             function jsonData(form) {
-                // let formdata = new FormData(addForm);
                 let arr = $(form).serializeArray();
                 let obj = {};
                 for (let a in arr) {
@@ -200,18 +210,20 @@ include('./connection.php');
             });
             // View Data
             let showData = () => {
-                $("#tbody").html("");
+                // $("#tbody").html("");
                 $.ajax({
                     method: "GET",
-                    url: "http://localhost/php-lab/CURD/ajax/single-view.php",
+                    url: "./ajax/single-view.php",
                     success: function(res) {
+                        res = JSON.parse(res);
+                        // console.log(res);
                         if (res.status == false) {
                             $("#tbody").append("<tr><td colspan='15'><h2>" + res.message + "</h2></td></tr>");
                         } else {
                             $.each(res, function(key, value) {
                                 $("#tbody").append(`<tr>
                                     <td>${value.srollno}</td>
-                                    <td><img src="./singleimg/${value.spic}" alt="No Img Found" width="70" height="70"></td>
+                                    <td><img src="./img/${value.spic}" alt="No Img Found" width="70" height="70"></td>
                                     <td>${value.sname}</td>
                                     <td>${value.sfname}</td>
                                     <td>${value.smobile}</td>
@@ -219,7 +231,7 @@ include('./connection.php');
                                     <td>${value.semail}</td>
                                     <td>${value.sdate}</td>
                                     <td>${value.tid}</td>
-                                    <td><img src="./singleimg/${value.tpic}" alt="No Img Found" width="70" height="70"></td>
+                                    <td><img src="./img/${value.tpic}" alt="No Img Found" width="70" height="70"></td>
                                     <td>${value.tname}</td>
                                     <td>${value.cttime}</td>
                                     <td>${value.cname}</td>

@@ -134,7 +134,7 @@ $fetch = mysqli_fetch_assoc($updtrun);
         } else {
           $.ajax({
             type: "POST",
-            url: "http://localhost/php-lab/CURD/ajax/single-update.php",
+            url: "http://localhost/php-lab/CRUD/ajax/single-update.php",
             data: jsonObj,
             contentType: false,
             processData: false,

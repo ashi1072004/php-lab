@@ -1,5 +1,5 @@
 <?php
-    include('./connection.php');
+include('./database.php');
 ?>
 <!doctype html>
 <html lang="en">
@@ -28,38 +28,38 @@
             <div class="mt-5 mb-3">
               <select class="form-select" name="teachid">
                 <?php
-                          $tsql = "SELECT * FROM `teacher`";
-                          $trun = mysqli_query($conn,$tsql);
-                        ?>
+                $tsql = "SELECT * FROM `teacher`";
+                $trun = mysqli_query($conn, $tsql);
+                ?>
                 <option selected>Select Teacher</option>
                 <?php
-                          while($fetch = mysqli_fetch_assoc($trun)){
-                            ?>
-                <option value="<?php echo $fetch['tid'];?>">
-                  <?php echo $fetch['tname'];?>
-                </option>
+                while ($fetch = mysqli_fetch_assoc($trun)) {
+                ?>
+                  <option value="<?php echo $fetch['tid']; ?>">
+                    <?php echo $fetch['tname']; ?>
+                  </option>
                 <?php
-                          }
-                        ?>
+                }
+                ?>
               </select>
             </div>
             <div class="mt-5 mb-3">
               <select class="form-select" name="classtime">
                 <?php
-                          $csql = "SELECT * FROM `classtime`";
-                          $crun = mysqli_query($conn,$csql);
-                        ?>
+                $csql = "SELECT * FROM `classtime`";
+                $crun = mysqli_query($conn, $csql);
+                ?>
                 <option selected>Select Class Time</option>
                 <?php
-                          while($cfetch = mysqli_fetch_assoc($crun)){
-                            ?>
-                <option value="<?php echo $cfetch['ctid'];?>">
-                  <?php echo $cfetch['cttime'];?> [
-                  <?php echo $cfetch['cname'];?>]
-                </option>
+                while ($cfetch = mysqli_fetch_assoc($crun)) {
+                ?>
+                  <option value="<?php echo $cfetch['ctid']; ?>">
+                    <?php echo $cfetch['cttime']; ?> [
+                    <?php echo $cfetch['cname']; ?>]
+                  </option>
                 <?php
-                          }
-                        ?>
+                }
+                ?>
               </select>
             </div>
             <div class="mb-3">
@@ -101,8 +101,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script>
     // "use strict";
-    $(document).ready(function () {
-      $("#form").on("submit", function (event) {
+    $(document).ready(function() {
+      $("#form").on("submit", function(event) {
         event.preventDefault();
         // form validation
         let formData = new FormData(form);
@@ -112,7 +112,7 @@
           data: formData,
           contentType: false,
           processData: false,
-          success: function (res) {
+          success: function(res) {
             // alert(res);
             if (res == 1) {
               $("#form").trigger("reset");

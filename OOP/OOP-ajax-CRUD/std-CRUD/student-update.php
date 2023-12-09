@@ -1,5 +1,5 @@
 <?php
-include('./connection.php');
+include('./database.php');
 
 $sid = $_GET['sid'];
 $std = "SELECT * FROM `std` WHERE `sid` = '$sid' ";

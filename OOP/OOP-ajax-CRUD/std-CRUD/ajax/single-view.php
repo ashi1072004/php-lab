@@ -6,7 +6,7 @@ if (isset($_GET['sid'])) {
     $obj->select('std', '*', null, "`sid`='$sid'", null, null);
 } else {
     $join = '`teacher` ON std.teachid = teacher.tid  INNER JOIN `classtime` ON std.classtime=classtime.ctid';
-    $obj->select('std', '*', $join, null, null, null);
+    $obj->select('std', '*', $join, null, null, 5);
 }
 
 $res = $obj->getRes();
@@ -15,7 +15,7 @@ $res = $obj->getRes();
 // echo '</pre>';
 
 if (!empty($res[0])) {
-    echo json_encode($res[0]);
+    echo json_encode($res);
 } else {
     echo json_encode(array("message" => "No record found", "status" => false));
 }

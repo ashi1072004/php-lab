@@ -130,6 +130,32 @@ $obj = new Database();
                             <tbody id="tbody"></tbody>
                         </table>
                     </div>
+                    <style>
+                        .pagination {
+                            display: flex;
+                            justify-content: center;
+                        }
+
+                        .pagination li {
+                            list-style-type: none;
+                            padding: 5px 10px;
+                            background-color: rgb(12, 94, 255);
+                            font-weight: bold;
+                            border-radius: 5px;
+                            margin: 0 5px;
+                        }
+
+                        .pagination li a {
+                            color: white;
+                            text-decoration: none;
+                        }
+                    </style>
+                    <div id="pages" class="mt-3">
+                        <?php
+                        $join = '`teacher` ON std.teachid = teacher.tid  INNER JOIN `classtime` ON std.classtime=classtime.ctid';
+                        echo $obj->pagination('std', $join, null, 5);
+                        ?>
+                    </div>
                 </div>
             </div>
         </div>
@@ -234,17 +260,19 @@ $obj = new Database();
                 }
             });
             // View Data
-            let showData = () => {
-                // $("#tbody").html("");
+            showData();
+
+            function showData() {
+                $("#tbody").html("");
                 $.ajax({
                     method: "GET",
                     url: "./ajax/single-view.php",
                     success: function(res) {
                         res = JSON.parse(res);
-                        if (res.status == false) {
-                            $("#tbody").append("<tr><td colspan='15'><h2>" + res.message + "</h2></td></tr>");
+                        if (res[0].status == false) {
+                            $("#tbody").append("<tr><td colspan='15'><h2>" + res[0].message + "</h2></td></tr>");
                         } else {
-                            $.each(res, function(key, value) {
+                            $.each(res[0], function(key, value) {
                                 $("#tbody").append(`<tr>
                                     <td>${value.srollno}</td>
                                     <td><img src="./img/${value.spic}" alt="No Img Found" width="70" height="70"></td>
@@ -265,8 +293,7 @@ $obj = new Database();
                         }
                     }
                 });
-            };
-            showData();
+            }
             // Delete Data
             $(document).on("click", ".delete", function() {
                 var id = $(this).data("del");

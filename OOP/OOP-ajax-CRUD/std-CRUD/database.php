@@ -81,8 +81,11 @@ class Database
                 $sql .= " ORDER BY `$order` ";
             }
             if ($limit != null) {
-                if (isset($_GET['page'])) {
-                    $page = $_GET['page'];
+                $url = $_SERVER['HTTP_REFERER'];
+                $url_components = parse_url($url);
+                parse_str($url_components['query'], $params);
+                if (isset($params['page'])) {
+                    $page = $params['page'];
                 } else {
                     $page = 1;
                 }
@@ -117,6 +120,7 @@ class Database
                 $t = ceil($res / $limit);
 
                 $url = basename($_SERVER['PHP_SELF']);
+                // $url = basename($_SERVER['HTTP_REFERER']);
                 if (isset($_GET['page'])) {
                     $page = $_GET['page'];
                 } else {
@@ -138,7 +142,7 @@ class Database
                     $output .= "<li><a href='$url?page=" . ($page + 1) . "'>Next</a></li>";
                 }
                 $output .= "</ul>";
-                echo $output;
+                return $output;
             }
         }
     }

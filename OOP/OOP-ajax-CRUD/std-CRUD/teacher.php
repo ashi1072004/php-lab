@@ -21,7 +21,7 @@ $obj = new Database();
         <div class="container py-3">
             <a class="btn btn-sm btn-warning text-white mx-2 fw-bold" href="./student.php">Student CRUD</a>
             <a class="btn btn-sm btn-warning text-white mx-2 fw-bold" href="./teacher.php">Teacher CRUD</a>
-            <a class="btn btn-sm btn-warning text-white mx-2 fw-bold" href="./teacher.php">Classes CRUD</a>
+            <a class="btn btn-sm btn-warning text-white mx-2 fw-bold" href="./classes.php">Classes CRUD</a>
         </div>
     </header>
     <main>
@@ -105,7 +105,7 @@ $obj = new Database();
                     </style>
                     <div id="pages" class="mt-3">
                         <?php
-                        echo $obj->pagination('teacher', null, null, 5);
+                        echo $obj->pagination('teacher', null, null, 6);
                         ?>
                     </div>
                 </div>

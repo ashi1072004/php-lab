@@ -1,6 +1,21 @@
 <?php
 include('../database.php');
 $obj = new Database();
+// Add Class
+if (isset($_POST['ctsub'])) {
+    $cttime = $obj->escapeString($_POST['cttime']);
+    $cname = $obj->escapeString($_POST['cname']);
+
+    $params = ['cttime' => $cttime, 'cname' => $cname, 'cdate' => date("Y/m/d")];
+    $obj->insert('classtime', $params);
+    $res = $obj->getRes();
+
+    if (isset($res[0])) {
+        echo json_encode(array("message" => "Data Inserted", "status" => 1));
+    } else {
+        echo json_encode(array("message" => "Data Not Inserted", "status" => 2));
+    }
+}
 // Add Teacher
 if (isset($_POST['tsub'])) {
     $tname = $obj->escapeString($_POST['tname']);

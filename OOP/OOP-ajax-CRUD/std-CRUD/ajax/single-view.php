@@ -1,13 +1,29 @@
 <?php
 include('../database.php');
 $obj = new Database();
+// View Classes
+if (isset($_GET['ctload'])) {
+    if (isset($_GET['ctid'])) {
+        $ctid = $_GET['ctid'];
+        $obj->select('classtime', '*', null, "`ctid`='$ctid'", null, null);
+    } else {
+        $obj->select('classtime', '*', null, null, null, 5);
+    }
+
+    $res = $obj->getRes();
+    if (!empty($res[0])) {
+        echo json_encode($res[0]);
+    } else {
+        echo json_encode(array("message" => "No record found", "status" => false));
+    }
+}
 // View Teacher
 if (isset($_GET['tload'])) {
     if (isset($_GET['tid'])) {
         $tid = $_GET['tid'];
         $obj->select('teacher', '*', null, "`tid`='$tid'", null, null);
     } else {
-        $obj->select('teacher', '*', null, null, null, 5);
+        $obj->select('teacher', '*', null, null, null, 6);
     }
 
     $res = $obj->getRes();

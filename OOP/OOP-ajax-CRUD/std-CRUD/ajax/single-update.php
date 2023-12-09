@@ -1,6 +1,22 @@
 <?php
 include('../database.php');
 $obj = new Database();
+// Update Class
+if (isset($_POST['ctsub'])) {
+    $ctid = $_POST['ctid'];
+    $cttime = $obj->escapeString($_POST['cttime']);
+    $cname = $obj->escapeString($_POST['cname']);
+
+    $params = ['cttime' => $cttime, 'cname' => $cname, 'cdate' => date("Y/m/d")];
+    $obj->update('classtime', $params, "`ctid`='$ctid'");
+    $res = $obj->getRes();
+
+    if (isset($res[0])) {
+        echo json_encode(array("message" => "Data updated", "status" => 1));
+    } else {
+        echo json_encode(array("message" => "Data not updated", "status" => 2));
+    }
+}
 // Update Teacher
 if (isset($_POST['tsub'])) {
     $tid = $_POST['tid'];

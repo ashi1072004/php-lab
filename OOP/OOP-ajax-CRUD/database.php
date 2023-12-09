@@ -4,7 +4,7 @@ class Database
     private $host = 'localhost';
     private $dbuser = 'root';
     private $dbpassword = '';
-    private $dbname = 'test';
+    private $dbname = 'project2';
     private $conn = false;
     private $res = array();
 
@@ -72,7 +72,7 @@ class Database
         if ($this->tableExists($table)) {
             $sql = "SELECT $field FROM `$table` ";
             if ($join != null) {
-                $sql .= " JOIN `$join` ";
+                $sql .= " INNER JOIN $join ";
             }
             if ($where != null) {
                 $sql .= " WHERE $where ";
@@ -81,7 +81,13 @@ class Database
                 $sql .= " ORDER BY `$order` ";
             }
             if ($limit != null) {
-                $sql .= " LIMIT 0, $limit";
+                if (isset($_GET['page'])) {
+                    $page = $_GET['page'];
+                } else {
+                    $page = 1;
+                }
+                $start = ($page - 1) * $limit;
+                $sql .= " LIMIT $start, $limit";
             }
             // die($sql);
         }
@@ -90,6 +96,50 @@ class Database
             array_push($this->res, $query->fetch_all(MYSQLI_ASSOC));
         } else {
             array_push($this->res, $this->conn->error);
+        }
+    }
+
+    public function pagination($table, $join = null, $where = null, $limit = null)
+    {
+        if ($this->tableExists($table)) {
+            if ($limit != null) {
+                $sql = "SELECT COUNT(*) FROM `$table` ";
+                if ($join != null) {
+                    $sql .= " INNER JOIN $join ";
+                }
+                if ($where != null) {
+                    $sql .= " WHERE $where ";
+                }
+                // die($sql);
+                $query = $this->conn->query($sql);
+                $res = $query->fetch_array();
+                $res = $res[0];
+                $t = ceil($res / $limit);
+
+                $url = basename($_SERVER['PHP_SELF']);
+                if (isset($_GET['page'])) {
+                    $page = $_GET['page'];
+                } else {
+                    $page = 1;
+                }
+                $output = "<ul class='pagination'>";
+                if ($page > 1) {
+                    $output .= "<li><a href='$url?page=" . ($page - 1) . "'>Previous</a></li>";
+                }
+                if ($res > $limit) {
+                    for ($i = 1; $i <= $t; $i++) {
+                        if ($i == $page)
+                            $output .= "<li><a  class='active' href='$url?page=$i'>$i</a></li>";
+                        else
+                            $output .= "<li><a href='$url?page=$i'>$i</a></li>";
+                    }
+                }
+                if ($t > $page) {
+                    $output .= "<li><a href='$url?page=" . ($page + 1) . "'>Next</a></li>";
+                }
+                $output .= "</ul>";
+                echo $output;
+            }
         }
     }
 
